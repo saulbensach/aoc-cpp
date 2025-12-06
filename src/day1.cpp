@@ -110,7 +110,7 @@ void day3_part1() {
         }
     }
 
-    std::cout << "Day 2 part 1 result: " << sum << "\n";
+    std::cout << "Day 3 part 1 result: " << sum << "\n";
 }
 
 void day3_part2() {
