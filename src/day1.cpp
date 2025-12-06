@@ -6,28 +6,28 @@ const std::string example2 = path + "example2.txt";
 const std::string example3 = path + "example3.txt";
 const std::string example4 = path + "example4.txt";
 const std::string day1_file = path + "day1.txt";
-const std::string day2_file = path + "day2.txt";
 const std::string day3_file = path + "day3.txt";
-const std::string day4_file = path + "day4.txt";
+const std::string day5_file = path + "day5.txt";
+const std::string day6_file = path + "day6.txt";
 
 void day1_part1();
 void day1_part2();
-void day2_part1();
-void day2_part2();
 void day3_part1();
 void day3_part2();
-void day4_part1();
-void day4_part2();
+void day5_part1();
+void day5_part2();
+void day6_part1();
+void day6_part2();
 
 int main() {
     day1_part1();
     day1_part2();
-    day2_part1();
-    day2_part2();
     day3_part1();
     day3_part2();
-    day4_part1();
-    day4_part2();
+    day5_part1();
+    day5_part2();
+    day6_part1();
+    day6_part2();
 
     return 0;
 }
@@ -89,8 +89,8 @@ void day1_part2() {
     std::cout << "Day 1 part 2 result: " << zero_count << "\n";
 }
 
-void day2_part1() {
-    std::ifstream file(day2_file);
+void day3_part1() {
+    std::ifstream file(day3_file);
     std::string line;
 
     int sum = 0;
@@ -113,8 +113,8 @@ void day2_part1() {
     std::cout << "Day 2 part 1 result: " << sum << "\n";
 }
 
-void day2_part2() {
-    std::ifstream file(day2_file);
+void day3_part2() {
+    std::ifstream file(day3_file);
     std::string line;
 
     int max_digits = 12;
@@ -147,11 +147,11 @@ void day2_part2() {
         }
     }
 
-    std::cout << "Day 2 part 2 result: " << total_sum << "\n";
+    std::cout << "Day 3 part 2 result: " << total_sum << "\n";
 }
 
-void day3_part1() {
-    std::ifstream file(day3_file);
+void day5_part1() {
+    std::ifstream file(day5_file);
     std::string line;
     std::vector<aoc::Range> ranges;
 
@@ -191,11 +191,11 @@ void day3_part1() {
         }
     }
 
-    std::cout << "Day 3 part 1 result: " << fresh << "\n";
+    std::cout << "Day 5 part 1 result: " << fresh << "\n";
 }
 
-void day3_part2() {
-    std::ifstream file(day3_file);
+void day5_part2() {
+    std::ifstream file(day5_file);
     std::string line;
     std::vector<aoc::Range> ranges;
 
@@ -253,11 +253,11 @@ void day3_part2() {
         }
     }
 
-    std::cout << "Day 3 part 2 result: " << fresh << "\n";
+    std::cout << "Day 5 part 2 result: " << fresh << "\n";
 }
 
-void day4_part1(){
-    std::ifstream file(day4_file);
+void day6_part1(){
+    std::ifstream file(day6_file);
     std::string line;
     std::vector<long> numbers;
     std::vector<std::string> operators;
@@ -290,7 +290,7 @@ void day4_part1(){
         }
     }
 
-    std::cout << "Day 4 part 1 result: " << total << "\n";
+    std::cout << "Day 6 part 1 result: " << total << "\n";
 }
 
 char get_or_zero(std::string number, int index) {
@@ -298,8 +298,8 @@ char get_or_zero(std::string number, int index) {
     return number[index];
 }
 
-void day4_part2(){
-    std::ifstream file(day4_file);
+void day6_part2(){
+    std::ifstream file(day6_file);
 
     std::vector<std::string> lines;
     if(file.is_open()) {
@@ -339,5 +339,5 @@ void day4_part2(){
     // sum the remaining thingy
     result += accumulator;
 
-    std::cout << "Day 4 part 2 result: " << result << "\n";
+    std::cout << "Day 6 part 2 result: " << result << "\n";
 }
