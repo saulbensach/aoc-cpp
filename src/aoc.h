@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <array>
 
 const std::string PATH = "/home/saul/Work/aoc-cpp/input/";
 

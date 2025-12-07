@@ -2,13 +2,16 @@
 
 const std::string path = "/home/saul/Work/aoc-cpp/input/";
 const std::string example1 = path + "example1.txt";
-const std::string example2 = path + "example2.txt";
 const std::string example3 = path + "example3.txt";
-const std::string example4 = path + "example4.txt";
+const std::string example5 = path + "example5.txt";
+const std::string example6 = path + "example6.txt";
+const std::string example7 = path + "example7.txt";
 const std::string day1_file = path + "day1.txt";
 const std::string day3_file = path + "day3.txt";
 const std::string day5_file = path + "day5.txt";
 const std::string day6_file = path + "day6.txt";
+const std::string day7_file = path + "day7.txt";
+
 
 void day1_part1();
 void day1_part2();
@@ -18,6 +21,8 @@ void day5_part1();
 void day5_part2();
 void day6_part1();
 void day6_part2();
+void day7_part1();
+void day7_part2();
 
 int main() {
     day1_part1();
@@ -28,6 +33,8 @@ int main() {
     day5_part2();
     day6_part1();
     day6_part2();
+    day7_part1();
+    day7_part2();
 
     return 0;
 }
@@ -293,11 +300,6 @@ void day6_part1(){
     std::cout << "Day 6 part 1 result: " << total << "\n";
 }
 
-char get_or_zero(std::string number, int index) {
-    if(index >= (int)number.size()) return '0';
-    return number[index];
-}
-
 void day6_part2(){
     std::ifstream file(day6_file);
 
@@ -340,4 +342,109 @@ void day6_part2(){
     result += accumulator;
 
     std::cout << "Day 6 part 2 result: " << result << "\n";
+}
+
+void day7_part1(){
+    std::ifstream file(day7_file);
+    std::vector<std::string> lines;
+    long times_split = 0;
+
+    if(file.is_open()) {
+        std::string line;
+
+        while (std::getline(file, line)) {
+            if (!line.empty()) lines.push_back(line);
+        }
+    }
+
+    // init beams matrix all to false
+    std::vector<std::vector<bool>> beams;
+    for(size_t y = 0; y < lines.size(); y++){
+        std::vector<bool> tmp;
+        for(size_t x = 0; x < lines[y].size(); x++){
+            tmp.push_back(false);
+        }
+        beams.push_back(tmp);
+    }
+
+
+    for(size_t y = 0; y < lines.size(); y++){
+        for(size_t x = 0; x < lines[y].size(); x++){
+            if(y == 0) continue;
+
+            if((lines[y-1][x] == '|' && lines[y][x] != '^') || lines[y-1][x] == 'S'){
+                lines[y][x] = '|';
+            }
+
+            char c = lines[y][x];
+
+            // logic for setting beams
+            if(c == '.') continue;
+
+            if(c == '^' && lines[y-1][x] == '|') {
+                times_split++;  
+                lines[y][x-1] = '|';
+                lines[y][x+1] = '|';
+            }
+        }
+    }
+
+    // for(std::string line : lines) {
+    //     std::cout << line << "\n";
+    // }
+
+    std::cout << "Day 7 part 1 result: " << times_split <<"\n";
+}
+
+void day7_part2(){
+    std::ifstream file(day7_file);
+    std::vector<std::string> lines;
+    
+    if(file.is_open()) {
+        std::string line;
+
+        while (std::getline(file, line)) {
+            if (!line.empty()) lines.push_back(line);
+        }
+    }
+
+    // init beams matrix all to false
+    std::vector<std::vector<long>> beams;
+    for(size_t y = 0; y < lines.size(); y++){
+        std::vector<long> tmp;
+        for(size_t x = 0; x < lines[y].size(); x++){
+            tmp.push_back(0);
+        }
+        beams.push_back(tmp);
+    }
+
+
+    for(size_t y = 0; y < lines.size(); y++){
+        for(size_t x = 0; x < lines[y].size(); x++){
+            if(y == 0) {
+                if(lines[y][x] == 'S') {
+                    beams[y][x] = 1;
+                }
+                continue;
+            }
+
+            char c = lines[y][x];
+
+            if(c == '.') {
+                beams[y][x] += beams[y-1][x];
+            }
+
+            if(c == '^') {
+                beams[y][x+1] += beams[y-1][x];
+                beams[y][x-1] += beams[y-1][x];
+            }
+        }
+    }
+
+    long result = 0;
+    for(long v : beams.back()) {
+        result += v;
+    }
+
+    std::cout << "Day 7 part 2 result: " << result <<"\n";
 }
