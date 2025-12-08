@@ -6,6 +6,7 @@ const std::string example3 = path + "example3.txt";
 const std::string example5 = path + "example5.txt";
 const std::string example6 = path + "example6.txt";
 const std::string example7 = path + "example7.txt";
+const std::string example8 = path + "example8.txt";
 const std::string day1_file = path + "day1.txt";
 const std::string day3_file = path + "day3.txt";
 const std::string day5_file = path + "day5.txt";
@@ -23,6 +24,7 @@ void day6_part1();
 void day6_part2();
 void day7_part1();
 void day7_part2();
+void day8_part1();
 
 int main() {
     day1_part1();
@@ -35,6 +37,7 @@ int main() {
     day6_part2();
     day7_part1();
     day7_part2();
+    day8_part1();
 
     return 0;
 }
@@ -399,7 +402,7 @@ void day7_part1(){
 void day7_part2(){
     std::ifstream file(day7_file);
     std::vector<std::string> lines;
-    
+
     if(file.is_open()) {
         std::string line;
 
@@ -408,7 +411,6 @@ void day7_part2(){
         }
     }
 
-    // init beams matrix all to false
     std::vector<std::vector<long>> beams;
     for(size_t y = 0; y < lines.size(); y++){
         std::vector<long> tmp;
@@ -447,4 +449,100 @@ void day7_part2(){
     }
 
     std::cout << "Day 7 part 2 result: " << result <<"\n";
+}
+
+void day8_part1() {
+    std::ifstream file(example8);
+    std::vector<std::string> lines;
+    std::vector<aoc::JunctionBox> boxes;
+    std::vector<aoc::Node> nodes;
+
+    if(file.is_open()) {
+        std::string line;
+
+        while (std::getline(file, line)) {
+            if (!line.empty()) lines.push_back(line);
+        }
+    }
+
+    std::vector<long> numbers;
+    for(std::string s : lines) {
+        std::stringstream ss(s);
+        std::string tmp;
+        
+        while(getline(ss, tmp, ',')){
+            numbers.push_back(std::stol(tmp));
+        }
+
+        long a = numbers[0];
+        long b = numbers[1];
+        long c = numbers[2];
+
+        numbers.clear();
+        nodes.push_back(aoc::Node(a,b,c));
+    }
+
+    std::vector<aoc::Edge> pairs;
+    for(size_t i = 0; i < nodes.size(); i++){
+        double shortest_distance = std::numeric_limits<double>::max();
+        aoc::Node* closest = nullptr;
+
+        for(size_t j = 0; j < nodes.size(); j++){
+            if(i == j) continue;
+            double dist = aoc::distance(&nodes[i], &nodes[j]);
+            if(dist < shortest_distance){
+                shortest_distance = dist;
+                closest = &nodes[j];
+            }
+
+        }
+
+        if(closest == nullptr) continue;
+
+        // make sure this pair does not exist already
+        // checked by references
+        bool exist = false;
+        for(aoc::Edge e : pairs) {
+            bool node_ab = (e.a == &nodes[i] && e.b == closest);
+            bool node_ba = (e.a == closest && e.b == &nodes[i]);
+            if(node_ab || node_ba) {
+                exist = true;
+                break;
+            }
+        }
+
+        if(!exist) {
+            pairs.push_back(aoc::Edge(&nodes[i], closest, shortest_distance));
+        }
+    }
+
+    std::sort(pairs.begin(), pairs.end(), [](const aoc::Edge &a, const aoc::Edge &b){ return a.distance < b.distance; });
+
+    std::vector<aoc::Graph> circuits;
+
+    for(size_t i = 0; i < pairs.size(); i++){
+        if(circuits.empty()) {
+            aoc::Graph circuit;
+            circuit.add_edge(&pairs[i]);
+            circuits.push_back(circuit);
+            continue;
+        }
+
+        // now we need to check if any node of this edge
+        // belongs to any other circuit
+        bool a_exist = false;
+        bool b_exist = false;
+        for(size_t j = 0; j < circuits.size(); j++){
+            for(size_t k = 0; k < circuits[j].nodes.size(); k++) {
+                if(circuits[j].nodes[k] == pairs[i].a) a_exist = true;
+                if(circuits[j].nodes[k] == pairs[i].b) b_exist = true;
+                if(a_exist || b_exist) break;
+            }
+            if(a_exist && b_exist) break;
+        }
+    }
+
+    for(aoc::Graph g : circuits) {
+        std::cout << g.nodes.size() << "\n";
+    }
 }
